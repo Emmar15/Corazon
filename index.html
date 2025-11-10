@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Corazon</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #f9e0ff 0%, #e0c3fc 50%, #c1e3ff 100%);
+      color: #ff4fa3;
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+    }
+
+    #input-container {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.3);
+      padding: 20px 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+    }
+
+    h2 {
+      font-weight: 600;
+      color: #d63384;
+    }
+
+    input {
+      padding: 10px 20px;
+      font-size: 18px;
+      border: 2px solid #ff8ad9;
+      border-radius: 8px;
+      text-align: center;
+      outline: none;
+      background-color: #fff;
+      color: #d63384;
+      font-weight: 500;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #ff8ad9;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ff5cb8;
+    }
+
+    pre {
+      font-family: 'Courier New', monospace;
+      white-space: pre;
+      text-align: center;
+      font-size: 16px;
+      line-height: 1.1em;
+      margin-top: 30px;
+      color: #ff4fa3;
+      animation: heartbeat 1.5s infinite;
+      transform-origin: center;
+    }
+
+    #message {
+      margin-top: 25px;
+      font-size: 22px;
+      color: #ff4fa3;
+      white-space: pre-wrap;
+      text-align: center;
+      font-weight: 500;
+      text-shadow: 0 0 6px rgba(255, 126, 194, 0.5);
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.05); }
+      50% { transform: scale(0.97); }
+      75% { transform: scale(1.05); }
+    }
+  </style>
+</head>
+<body>
+  <div id="input-container">
+    <h2>Escribe tu nombre</h2>
+    <input type="text" id="nameInput" placeholder="Tu nombre aquí" />
+    <br />
+    <button onclick="startHeart()">Enviar</button>
+  </div>
+
+  <pre id="heart"></pre>
+  <div id="message"></div>
+
+  <script>
+    const heartElement = document.getElementById("heart");
+    const messageElement = document.getElementById("message");
+    const inputContainer = document.getElementById("input-container");
+
+    const heartShape = [
+      "      *****       *****      ",
+      "    *********   *********    ",
+      "  *********** ***********   ",
+      " *************************  ",
+      " *************************  ",
+      "  ***********************   ",
+      "   *********************    ",
+      "    *******************     ",
+      "      ***************       ",
+      "        ***********         ",
+      "          *******           ",
+      "            ***             ",
+      "             *              "
+    ];
+
+    function startHeart() {
+      const name = document.getElementById("nameInput").value.trim();
+      if (!name) return;
+
+      inputContainer.style.animation = "fadeOut 1s forwards";
+      setTimeout(() => inputContainer.style.display = "none", 1000);
+      generateHeart(name);
+    }
+
+    async function generateHeart(name) {
+      const letters = name.toUpperCase().split("");
+      heartElement.innerHTML = "";
+
+      for (let i = 0; i < heartShape.length; i++) {
+        await new Promise((resolve) => setTimeout(resolve, 150));
+        let line = "";
+        let charIndex = 0;
+        for (let ch of heartShape[i]) {
+          if (ch === "*") {
+            line += letters[charIndex % letters.length];
+            charIndex++;
+          } else {
+            line += " ";
+          }
+        }
+        heartElement.innerHTML += line + "\n";
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      writeMessage("Te amo mucho,\ncon amor Emma 💖");
+    }
+
+    async function writeMessage(text) {
+      for (let i = 0; i < text.length; i++) {
+        await new Promise((resolve) => setTimeout(resolve, 80));
+        messageElement.innerHTML += text[i];
+      }
+    }
+  </script>
+</body>
+</html>
